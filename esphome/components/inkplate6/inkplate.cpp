@@ -326,9 +326,9 @@ void Inkplate6::display1b_() {
     clean_fast_(0, 1);
     clean_fast_(1, 15);
     clean_fast_(2, 1);
-    clean_fast_(0, 5);
-    clean_fast_(2, 1);
-    clean_fast_(1, 15);
+    //clean_fast_(0, 5);
+    //clean_fast_(2, 1);
+    //clean_fast_(1, 15);
   } else {
     clean_fast_(0, 1);
     clean_fast_(1, 21);
@@ -437,9 +437,9 @@ void Inkplate6::display3b_() {
     clean_fast_(0, 1);
     clean_fast_(1, 15);
     clean_fast_(2, 1);
-    clean_fast_(0, 5);
-    clean_fast_(2, 1);
-    clean_fast_(1, 15);
+    //clean_fast_(0, 5);
+    //clean_fast_(2, 1);
+    //clean_fast_(1, 15);
   } else {
     clean_fast_(0, 1);
     clean_fast_(1, 21);
