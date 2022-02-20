@@ -19,6 +19,7 @@ enum GPIOSwitchRestoreMode {
 class GPIOSwitch : public switch_::Switch, public Component {
  public:
   void set_pin(GPIOPin *pin) { pin_ = pin; }
+  GPIOPin* get_pin() { return pin_; }
 
   void set_restore_mode(GPIOSwitchRestoreMode restore_mode);
 

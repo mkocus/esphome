@@ -1,3 +1,4 @@
+from email.policy import default
 import esphome.codegen as cg
 import esphome.config_validation as cv
 from esphome import pins
@@ -31,6 +32,7 @@ CONF_GPIO0_ENABLE_PIN = "gpio0_enable_pin"
 CONF_LE_PIN = "le_pin"
 CONF_OE_PIN = "oe_pin"
 CONF_PARTIAL_UPDATING = "partial_updating"
+CONF_SKIP_UPDATE = "skip_update"
 CONF_POWERUP_PIN = "powerup_pin"
 CONF_SPH_PIN = "sph_pin"
 CONF_SPV_PIN = "spv_pin"
@@ -56,6 +58,7 @@ CONFIG_SCHEMA = cv.All(
             cv.GenerateID(): cv.declare_id(Inkplate6),
             cv.Optional(CONF_GREYSCALE, default=False): cv.boolean,
             cv.Optional(CONF_PARTIAL_UPDATING, default=True): cv.boolean,
+            cv.Optional(CONF_SKIP_UPDATE, default=False): cv.boolean,
             cv.Optional(CONF_FULL_UPDATE_EVERY, default=10): cv.uint32_t,
             cv.Optional(CONF_MODEL, default="inkplate_6"): cv.enum(
                 MODELS, lower=True, space="_"
@@ -122,6 +125,7 @@ async def to_code(config):
     cg.add(var.set_greyscale(config[CONF_GREYSCALE]))
     cg.add(var.set_partial_updating(config[CONF_PARTIAL_UPDATING]))
     cg.add(var.set_full_update_every(config[CONF_FULL_UPDATE_EVERY]))
+    cg.add(var.set_skip_update(config[CONF_SKIP_UPDATE]))
 
     cg.add(var.set_model(config[CONF_MODEL]))
 

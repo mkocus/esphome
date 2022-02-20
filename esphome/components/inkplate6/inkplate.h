@@ -43,6 +43,7 @@ class Inkplate6 : public PollingComponent, public display::DisplayBuffer, public
   }
   void set_partial_updating(bool partial_updating) { this->partial_updating_ = partial_updating; }
   void set_full_update_every(uint32_t full_update_every) { this->full_update_every_ = full_update_every; }
+  void set_skip_update(bool skip_update) { this->skip_update_ = skip_update; }
 
   void set_model(InkplateModel model) { this->model_ = model; }
 
@@ -157,6 +158,7 @@ class Inkplate6 : public PollingComponent, public display::DisplayBuffer, public
   bool block_partial_{true};
   bool greyscale_;
   bool partial_updating_;
+  bool skip_update_;
 
   InkplateModel model_;
 

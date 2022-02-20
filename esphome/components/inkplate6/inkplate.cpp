@@ -298,6 +298,11 @@ void Inkplate6::fill(Color color) {
 
 void Inkplate6::display() {
   ESP_LOGV(TAG, "Display called");
+  if (this->skip_update_) {
+    ESP_LOGV(TAG, "Skipping single update as requested.");
+    this->skip_update_ = false;
+    return;
+  }
   uint32_t start_time = millis();
 
   if (this->greyscale_) {
