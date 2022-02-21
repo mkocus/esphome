@@ -13,9 +13,10 @@ namespace inkplate6 {
 static const char *const TAG = "inkplate";
 
 void Inkplate6::setup() {
-  for (uint32_t i = 0; i < 256; i++)
+  for (uint32_t i = 0; i < 256; i++) {
     this->pin_lut_[i] = ((i & 0b00000011) << 4) | (((i & 0b00001100) >> 2) << 18) | (((i & 0b00010000) >> 4) << 23) |
                         (((i & 0b11100000) >> 5) << 25);
+  }
 
   this->initialize_();
 
@@ -612,14 +613,15 @@ void Inkplate6::clean_fast_(uint8_t c, uint8_t rep) {
 
   eink_on_();
   uint8_t data = 0;
-  if (c == 0)  // White
+  if (c == 0) {  // White
     data = 0b10101010;
-  else if (c == 1)  // Black
+  } else if (c == 1) {  // Black
     data = 0b01010101;
-  else if (c == 2)  // Discharge
+  } else if (c == 2) {  // Discharge
     data = 0b00000000;
-  else if (c == 3)  // Skip
+  } else if (c == 3) {  // Skip
     data = 0b11111111;
+  }
 
   uint32_t send = ((data & 0b00000011) << 4) | (((data & 0b00001100) >> 2) << 18) | (((data & 0b00010000) >> 4) << 23) |
                   (((data & 0b11100000) >> 5) << 25);

@@ -52,7 +52,7 @@ void DallasComponent::setup() {
     this->found_sensors_.push_back(address);
   }
 
-  for (auto sensor : this->sensors_) {
+  for (auto *sensor : this->sensors_) {
     if (sensor->get_index().has_value()) {
       if (*sensor->get_index() >= this->found_sensors_.size()) {
         this->status_set_error();
@@ -110,6 +110,9 @@ void DallasComponent::update() {
   if (!result) {
     ESP_LOGE(TAG, "Requesting conversion failed");
     this->status_set_warning();
+    for (auto *sensor : this->sensors_) {
+      sensor->publish_state(NAN);
+    }
     return;
   }
 
@@ -235,7 +238,7 @@ float DallasTemperatureSensor::get_temp_c() {
 
   return temp / 128.0f;
 }
-std::string DallasTemperatureSensor::unique_id() { return "dallas-" + str_upper_case(format_hex(this->address_)); }
+std::string DallasTemperatureSensor::unique_id() { return "dallas-" + str_lower_case(format_hex(this->address_)); }
 
 }  // namespace dallas
 }  // namespace esphome
