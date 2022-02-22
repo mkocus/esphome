@@ -52,6 +52,9 @@ void DeepSleepComponent::dump_config() {
   if (this->run_duration_.has_value()) {
     ESP_LOGCONFIG(TAG, "  Run Duration: %u ms", *this->run_duration_);
   }
+  if (this->prevent_timeout_.has_value()) {
+    ESP_LOGCONFIG(TAG, "  Prevent Timeout: %u ms", *this->prevent_timeout_);
+  }
 #ifdef USE_ESP32
   if (wakeup_pin_ != nullptr) {
     LOG_PIN("  Wakeup Pin: ", this->wakeup_pin_);
@@ -71,6 +74,7 @@ float DeepSleepComponent::get_loop_priority() const {
   return -100.0f;  // run after everything else is ready
 }
 void DeepSleepComponent::set_sleep_duration(uint32_t time_ms) { this->sleep_duration_ = uint64_t(time_ms) * 1000; }
+void DeepSleepComponent::set_prevent_timeout(uint32_t time_ms) { this->prevent_timeout_ = time_ms; }
 #ifdef USE_ESP32
 void DeepSleepComponent::set_wakeup_pin_mode(WakeupPinMode wakeup_pin_mode) {
   this->wakeup_pin_mode_ = wakeup_pin_mode;
@@ -83,7 +87,7 @@ void DeepSleepComponent::set_run_duration(WakeupCauseToRunDuration wakeup_cause_
 #endif
 void DeepSleepComponent::set_run_duration(uint32_t time_ms) { this->run_duration_ = time_ms; }
 void DeepSleepComponent::begin_sleep(bool manual) {
-  if (this->prevent_ && !manual) {
+  if (this->prevent_ && !manual && !this->prevent_timeout_.has_value()) {
     this->next_enter_deep_sleep_ = true;
     return;
   }
@@ -99,6 +103,15 @@ void DeepSleepComponent::begin_sleep(bool manual) {
     return;
   }
 #endif
+  if (this->prevent_timeout_.has_value()) {
+      uint32_t current = millis();
+      uint32_t timeout = *this->prevent_timeout_;
+      uint32_t left = current - prevent_call_time_;
+      if (left < timeout) {
+        this->next_enter_deep_sleep_ = true;
+        return;
+      }
+  }
 
   ESP_LOGI(TAG, "Beginning Deep Sleep");
 
@@ -143,7 +156,10 @@ void DeepSleepComponent::begin_sleep(bool manual) {
 #endif
 }
 float DeepSleepComponent::get_setup_priority() const { return setup_priority::LATE; }
-void DeepSleepComponent::prevent_deep_sleep() { this->prevent_ = true; }
+void DeepSleepComponent::prevent_deep_sleep() { 
+  this->prevent_ = true; 
+  this->prevent_call_time_ = millis();
+  }
 
 }  // namespace deep_sleep
 }  // namespace esphome

@@ -87,6 +87,7 @@ CONF_TOUCH_WAKEUP = "touch_wakeup"
 CONF_DEFAULT = "default"
 CONF_GPIO_WAKEUP_REASON = "gpio_wakeup_reason"
 CONF_TOUCH_WAKEUP_REASON = "touch_wakeup_reason"
+CONF_PREVENT_TIMEOUT = "prevent_timeout"
 
 WAKEUP_CAUSES_SCHEMA = cv.Schema(
     {
@@ -122,6 +123,7 @@ CONFIG_SCHEMA = cv.Schema(
             ),
         ),
         cv.Optional(CONF_TOUCH_WAKEUP): cv.All(cv.only_on_esp32, cv.boolean),
+        cv.Optional(CONF_PREVENT_TIMEOUT): cv.positive_time_period_milliseconds,
     }
 ).extend(cv.COMPONENT_SCHEMA)
 
@@ -173,6 +175,9 @@ async def to_code(config):
 
     if CONF_TOUCH_WAKEUP in config:
         cg.add(var.set_touch_wakeup(config[CONF_TOUCH_WAKEUP]))
+
+    if CONF_PREVENT_TIMEOUT in config:
+        cg.add(var.set_prevent_timeout(config[CONF_PREVENT_TIMEOUT]))
 
     cg.add_define("USE_DEEP_SLEEP")
 

@@ -76,6 +76,8 @@ class DeepSleepComponent : public Component {
   // deep sleep mode, according to the cause the ESP32 has woken.
   void set_run_duration(WakeupCauseToRunDuration wakeup_cause_to_run_duration);
 
+  void set_prevent_timeout(uint32_t time_ms);
+
 #endif
   /// Set a duration in ms for how long the code should run before entering deep sleep mode.
   void set_run_duration(uint32_t time_ms);
@@ -97,6 +99,7 @@ class DeepSleepComponent : public Component {
   optional<uint32_t> get_run_duration_() const;
 
   optional<uint64_t> sleep_duration_;
+  optional<uint32_t> prevent_timeout_;
 #ifdef USE_ESP32
   InternalGPIOPin *wakeup_pin_;
   WakeupPinMode wakeup_pin_mode_{WAKEUP_PIN_MODE_IGNORE};
@@ -107,6 +110,7 @@ class DeepSleepComponent : public Component {
   optional<uint32_t> run_duration_;
   bool next_enter_deep_sleep_{false};
   bool prevent_{false};
+  uint32_t prevent_call_time_{0};
 };
 
 extern bool global_has_deep_sleep;  // NOLINT(cppcoreguidelines-avoid-non-const-global-variables)
