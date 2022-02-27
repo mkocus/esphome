@@ -21,9 +21,15 @@ class DS1307Component : public time::RealTimeClock, public i2c::I2CDevice {
   bool write_rtc_();
   union DS1307Reg {
     struct {
+      uint8_t control1 : 8;
+      uint8_t control2 : 8;
+      uint8_t offset : 7;
+      bool mode : 1;
+      uint8_t ramByte : 8;
+
       uint8_t second : 4;
       uint8_t second_10 : 3;
-      bool ch : 1;
+      bool os : 1;
 
       uint8_t minute : 4;
       uint8_t minute_10 : 3;
@@ -33,13 +39,13 @@ class DS1307Component : public time::RealTimeClock, public i2c::I2CDevice {
       uint8_t hour_10 : 2;
       uint8_t unused_2 : 2;
 
-      uint8_t weekday : 3;
-      uint8_t unused_3 : 5;
-
       uint8_t day : 4;
       uint8_t day_10 : 2;
-      uint8_t unused_4 : 2;
+      uint8_t unused_3 : 2;
 
+      uint8_t weekday : 3;
+      uint8_t unused_4 : 5;
+      
       uint8_t month : 4;
       uint8_t month_10 : 1;
       uint8_t unused_5 : 3;
@@ -47,11 +53,14 @@ class DS1307Component : public time::RealTimeClock, public i2c::I2CDevice {
       uint8_t year : 4;
       uint8_t year_10 : 4;
 
-      uint8_t rs : 2;
-      uint8_t unused_6 : 2;
-      bool sqwe : 1;
-      uint8_t unused_7 : 2;
-      bool out : 1;
+      uint8_t alarm_second : 8;
+      uint8_t alarm_minute : 8;
+      uint8_t alarm_hour : 8;
+      uint8_t alarm_day : 8;
+      uint8_t alarm_weekday : 8;
+
+      uint8_t timer_value : 8;
+      uint8_t timer_mode : 8;
     } reg;
     mutable uint8_t raw[sizeof(reg)];
   } ds1307_;
