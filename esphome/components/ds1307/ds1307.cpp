@@ -3,6 +3,7 @@
 
 // Datasheet:
 // - https://datasheets.maximintegrated.com/en/ds/DS1307.pdf
+// - https://www.mouser.pl/datasheet/2/302/PCF85063A-1127780.pdf
 
 namespace esphome {
 namespace ds1307 {
@@ -55,6 +56,7 @@ void DS1307Component::write_time() {
     ESP_LOGE(TAG, "Invalid system time, not syncing to RTC.");
     return;
   }
+  ds1307_.reg.os = false;
   ds1307_.reg.year = (now.year - 2000) % 10;
   ds1307_.reg.year_10 = (now.year - 2000) / 10 % 10;
   ds1307_.reg.month = now.month % 10;
@@ -78,8 +80,7 @@ bool DS1307Component::read_rtc_() {
     return false;
   }
   if (ds1307_.reg.os) {
-    ESP_LOGE(TAG, "RTC Power loss detected, time is invalid.");
-    return false;
+    ESP_LOGW(TAG, "RTC Oscilator has stopped, will need restarting by setting new time. Check RTC power supply if problem persist.");
   }
   ESP_LOGD(TAG, "Read  %0u%0u:%0u%0u:%0u%0u 20%0u%0u-%0u%0u-%0u%0u", ds1307_.reg.hour_10,
            ds1307_.reg.hour, ds1307_.reg.minute_10, ds1307_.reg.minute, ds1307_.reg.second_10, ds1307_.reg.second,
