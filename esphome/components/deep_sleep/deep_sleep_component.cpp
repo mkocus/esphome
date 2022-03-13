@@ -103,7 +103,7 @@ void DeepSleepComponent::begin_sleep(bool manual) {
     return;
   }
 #endif
-  if (this->prevent_timeout_.has_value()) {
+  if (this->prevent_ && this->prevent_timeout_.has_value()) {
       uint32_t current = millis();
       uint32_t timeout = *this->prevent_timeout_;
       uint32_t left = current - prevent_call_time_;
