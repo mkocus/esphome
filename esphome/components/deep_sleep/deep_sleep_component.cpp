@@ -2,6 +2,7 @@
 #include "esphome/core/log.h"
 #include "esphome/core/application.h"
 #include "driver/adc.h"
+#include "driver/rtc_io.h"
 
 #ifdef USE_ESP8266
 #include <Esp.h>
@@ -137,6 +138,7 @@ void DeepSleepComponent::begin_sleep(bool manual) {
     esp_sleep_pd_config(ESP_PD_DOMAIN_RTC_PERIPH, ESP_PD_OPTION_ON);
   }
 
+  rtc_gpio_isolate(GPIO_NUM_12);
   adc_power_off();
   esp_deep_sleep_start();
 #endif
